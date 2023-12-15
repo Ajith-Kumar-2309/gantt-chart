@@ -8,8 +8,8 @@ import * as Moment from 'moment';
 import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
 
-import { Step } from './models/step';
-import { StepFlatNode } from './models/stepFlatNode';
+import { Step } from '../models/step';
+import { StepFlatNode } from '../models/stepFlatNode';
 
 @Injectable()
 export class ChartDatabase {
@@ -32,8 +32,11 @@ export class ChartDatabase {
 
   // load local data
   loadStorage() {
-    const charts : any = localStorage.getItem(this.storageKey);
-    return JSON.parse(charts);
+    const charts: any = localStorage.getItem(this.storageKey);
+    if (charts) {
+      return JSON.parse(charts) as Array<Step>; // Parse the data only if it exists
+    }
+    return []; // Return an empty array if there's no data or an error occurs
   }
 
   // save local data
@@ -160,14 +163,14 @@ export class ChartDatabase {
 
 }
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: 'app-chart',
+  templateUrl: './chart.component.html',
+  styleUrls: ['./chart.component.scss'],
   providers: [ChartDatabase]
 })
 
 
-export class AppComponent {
+export class ChartComponent {
   title = 'chart';
 
   moment = moment;
